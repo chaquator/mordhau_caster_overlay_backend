@@ -41,7 +41,7 @@ statusRouter.post('/set_status', (req, res) => {
 
     const new_status = statusManager.setStatus(req.body.status);
 
-    res.send(JSON.stringify(new_status));
+    res.json(new_status);
 });
 
 export default statusRouter;

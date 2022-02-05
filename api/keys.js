@@ -19,7 +19,7 @@ keyManagerRouter.get('/keys', (req, res) => {
         return;
     }
 
-    res.send(JSON.stringify({ keys: keyManager.getKeys() }));
+    res.json({ keys: keyManager.getKeys() });
 });
 
 keyManagerRouter.post('/login', (req, res) => {
@@ -47,7 +47,7 @@ keyManagerRouter.post('/create_key', (req, res) => {
     }
 
     const key = keyManager.createAndAddKey();
-    res.send(JSON.stringify({ key: key }));
+    res.json({ key: key });
 });
 
 keyManagerRouter.post('/delete_key', (req, res) => {

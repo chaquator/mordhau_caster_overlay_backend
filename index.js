@@ -11,7 +11,7 @@ const session_secret = process.env.SESSION_SECRET;
 if (!session_secret) {
     throw 'SESSION_SECRET environment variable is required.\nRecommend: dd if=/dev/urandom bs=192 count=1 status=none | base64 -w0';
 }
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 8080;
 
 const twelve_hrs = 1000 * 60 * 60 * 12;
 const app = express()
@@ -38,7 +38,7 @@ apiRouter.use('/status', statusRouter);
 apiRouter.use('/keys', keyManagerRouter);
 
 apiRouter.get('/data', (_, res) => {
-    res.send(JSON.stringify(statusManager.getStatus()));
+    res.json(statusManager.getStatus());
 });
 
 // Send current score to newly connecting clients
