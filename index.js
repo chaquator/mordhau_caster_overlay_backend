@@ -24,30 +24,22 @@ const app = express()
         saveUninitialized: false,
         secret: session_secret,
     }));
+
+if (process.env.NODE_ENV != "production") {
+    app.use('/public', express.static('../public'));
+}
+
 const wss = new WebSocketServer({ noServer: true });
-
-// app.get('/', (_, res) => {
-//     res.sendFile('public/hud.html', { root: '.' });
-// });
-
-app.get('/data', (_, res) => {
-    res.send(JSON.stringify(statusManager.getStatus()));
-});
-
-app.get('/icon_map', (_, res) => {
-    res.sendFile('public/icon_map.json', { root: '.' });
-});
-
-// app.get("*", (_, res) => {
-//     const react_flle_path = path.resolve(process.cwd(), react_build_path, "index.html");
-//     console.log(react_flle_path);
-//     res.sendFile(react_flle_path);
-// });
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
+
 apiRouter.use('/status', statusRouter);
 apiRouter.use('/keys', keyManagerRouter);
+
+apiRouter.get('/data', (_, res) => {
+    res.send(JSON.stringify(statusManager.getStatus()));
+});
 
 // Send current score to newly connecting clients
 wss.on('connection', socket => {

@@ -1,5 +1,6 @@
 import express from 'express'
 import statusManager from '../statusManager.js';
+import keyManager from '../keyManager.js';
 import { verifyAuthGeneric } from '../auth.js'
 
 const verifyAuthStatus = req => verifyAuthGeneric(
