@@ -9,7 +9,7 @@ import keyManagerRouter from './api/keys.js';
 
 const session_secret = process.env.SESSION_SECRET;
 if (!session_secret) {
-    throw 'SESSION_SECRET environment variable is required.\nRecommend: dd if=/dev/urandom bs=192 count=1 status=none | base64 -w0';
+    throw 'SESSION_SECRET environment variable is required.\nRecommend: dd if=/dev/urandom bs=192 count=1 status=none | base64 -w256';
 }
 const port = process.env.PORT || 8080;
 
