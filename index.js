@@ -2,6 +2,7 @@ import process from 'process';
 import express from 'express';
 import session from 'express-session';
 import { WebSocketServer } from 'ws';
+import log from './log.js';
 import statusManager from './statusManager.js';
 import keyManager from './keyManager.js';
 import statusRouter from './api/status.js';
@@ -54,7 +55,7 @@ statusManager.statusEmitter.on('status', status => {
     });
 });
 
-const server = app.listen(port, () => console.log(`Server running on port ${port}`));
+const server = app.listen(port, () => log.info(`Server running on port ${port}`));
 server.on('upgrade', (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, socket => {
         wss.emit('connection', socket, request);
@@ -63,8 +64,8 @@ server.on('upgrade', (request, socket, head) => {
 
 if (process.env.MANAGER_KEY) {
     keyManager.setManagerKey(process.env.MANAGER_KEY);
-    console.log('Using manager key from environment variable');
+    log.info('Using manager key from environment variable');
 } else {
     const key = keyManager.generateManagerKey();
-    console.log(`Manager key: ${key}`);
+    log.info(`Manager key: ${key}`);
 }

@@ -6,6 +6,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "bunyan": "^1.8.15",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
     "uuid": "^8.3.2",
@@ -17,6 +18,6 @@
     "nodemon": "^2.0.15"
   },
   "scripts": {
-    "start": "nodemon -r dotenv/config"
+    "start": "nodemon -r dotenv/config | ./node_modules/.bin/bunyan -o short --color -l DEBUG"
   }
 }
