@@ -12,7 +12,7 @@ const session_secret = process.env.SESSION_SECRET;
 if (!session_secret) {
     throw 'SESSION_SECRET environment variable is required.\nRecommend: dd if=/dev/urandom bs=192 count=1 status=none | base64 -w256';
 }
-const port = process.env.PORT || 8080;
+const port = process.env.EXPRESS_PORT || 8080;
 const ws_port = process.env.WS_PORT || 8081;
 
 const twelve_hrs = 1000 * 60 * 60 * 12;
@@ -31,7 +31,10 @@ if (process.env.NODE_ENV != "production") {
     app.use('/public', express.static('../public'));
 }
 
-const wss = new WebSocketServer({ noServer: false, port: ws_port });
+const wss = new WebSocketServer({ noServer: false, port: ws_port },
+    () => {
+        log.info(`WebSocket server listening at port ${ws_port}`);
+    });
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
@@ -56,13 +59,7 @@ statusManager.statusEmitter.on('status', status => {
     });
 });
 
-const server = app.listen(port, () => log.info(`Server running on port ${port}`));
-// server.on('upgrade', (request, socket, head) => {
-//     log.info({ip: socket.remoteAddress}, "Upgrade");
-//     wss.handleUpgrade(request, socket, head, socket => {
-//         wss.emit('connection', socket, request);
-//     });
-// });
+app.listen(port, () => log.info(`express server listening at port ${port}`));
 
 if (process.env.MANAGER_KEY) {
     keyManager.setManagerKey(process.env.MANAGER_KEY);
