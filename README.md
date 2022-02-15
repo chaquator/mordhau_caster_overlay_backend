@@ -2,8 +2,10 @@
 Backend for the Mordhau caster overlay.
 
 # Environment variables
- * `EXPRESS_PORT` - Port for express backend
- * `WS_PORT` - Port for WebSocket server
+ * `EXPRESS_PORT` - Port for express backend (default: 8080)
+ * `WS_PORT` - Port for WebSocket server (default: 8081)
+ * `STANDALONE` - Specify whether to only run as the API backend or also serve the react frontend and proxy to the WebSocket server
+ * `SESSION_SECRET` - Session secret string for [express-session](https://www.npmjs.com/package/express-session) (Default: randomly generated 192-bit string at runtime)
 
 # API Routes
  * `/api/data` - Current HUD overlay status as a JSON response using the following schema:
