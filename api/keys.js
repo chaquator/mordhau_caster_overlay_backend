@@ -4,7 +4,7 @@ import keyManager from '../keyManager.js';
 import { verifyAuthGeneric } from '../auth.js'
 
 const verifyAuthKeyManager = req => {
-    log.debug({ ip: req.ip }, "Key manager auth check");
+    log.debug({ ip: req.ip }, 'Key manager auth check');
     return verifyAuthGeneric(
         req,
         req => req.session.keyManager,
@@ -28,7 +28,7 @@ keyManagerRouter.get('/keys', (req, res) => {
 
 keyManagerRouter.post('/login', (req, res) => {
     if (verifyAuthKeyManager(req)) {
-        log.info({ iq: req.ip, key: req.body.authKey }, "Key manager login");
+        log.info({ iq: req.ip, key: req.body.authKey }, 'Key manager login');
         req.session.keyManager = true;
         res.sendStatus(200);
     } else {
@@ -53,7 +53,7 @@ keyManagerRouter.post('/create_key', (req, res) => {
 
 
     const key = keyManager.createAndAddKey();
-    log.info({ ip: req.ip, keyCreate: key }, "Creating new key");
+    log.info({ ip: req.ip, keyCreate: key }, 'Creating new key');
     res.json({ key: key });
 });
 
@@ -65,17 +65,17 @@ keyManagerRouter.post('/delete_key', (req, res) => {
 
     const key = req.body.key;
 
-    log.info({ ip: req.ip, keyDelete: key }, "Deleting key");
+    log.info({ ip: req.ip, keyDelete: key }, 'Deleting key');
 
     if (keyManager.deleteKey(key)) {
         res.sendStatus(200);
     } else {
-        log.warn({ ip: req.ip, keyDelete: key }, "Delete key failed.");
+        log.warn({ ip: req.ip, keyDelete: key }, 'Delete key failed.');
         res.sendStatus(400);
     }
 });
 
-keyManagerRouter.post("/clear_keys", (req, res) => {
+keyManagerRouter.post('/clear_keys', (req, res) => {
     if (!verifyAuthKeyManager(req)) {
         res.sendStatus(401);
         return;
@@ -83,7 +83,7 @@ keyManagerRouter.post("/clear_keys", (req, res) => {
 
     keyManager.clearKeys();
 
-    log.info({ ip: req.ip }, "Clearing keys");
+    log.info({ ip: req.ip }, 'Clearing keys');
 
     res.sendStatus(200);
 });

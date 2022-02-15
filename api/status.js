@@ -5,7 +5,7 @@ import keyManager from '../keyManager.js';
 import { verifyAuthGeneric } from '../auth.js'
 
 const verifyAuthStatus = req => {
-    log.debug({ ip: req.ip }, "Status manager auth check");
+    log.debug({ ip: req.ip }, 'Status manager auth check');
     return verifyAuthGeneric(
         req,
         req => req.session.authenticated,
@@ -20,7 +20,7 @@ statusRouter.get('/auth', (req, res) => {
 
 statusRouter.post('/login', (req, res) => {
     if (verifyAuthStatus(req)) {
-        log.info({ ip: req.ip, key: req.body.authKey }, "Status manager login");
+        log.info({ ip: req.ip, key: req.body.authKey }, 'Status manager login');
 
         req.session.authenticated = true;
         res.sendStatus(200);
@@ -47,7 +47,7 @@ statusRouter.post('/set_status', (req, res) => {
 
     const new_status = statusManager.setStatus(req.body.status);
 
-    log.info({ ip: req.ip, key: req.body.authKey }, "New status set");
+    log.info({ ip: req.ip, key: req.body.authKey }, 'New status set');
 
     res.json(new_status);
 });
