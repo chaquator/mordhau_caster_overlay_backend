@@ -13,6 +13,6 @@ export function verifyAuthGeneric(req, authSessionFunc, authKeyFunc) {
         }
     }
 
-    log.debug({ ip: req.ip, key: req.body.authKey }, "Failed to authorize");
+    log.info({ ip: req.ip, key: req.body.authKey }, "Failed to authorize");
     return false;
 }

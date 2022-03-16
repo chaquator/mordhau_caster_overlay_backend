@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import express from 'express';
 import session from 'express-session';
 import httpProxy from 'http-proxy';
+import { setInterval } from 'timers';
 import { WebSocketServer } from 'ws';
 import log from './log.js';
 import statusManager from './statusManager.js';
@@ -20,12 +21,12 @@ const ws_port = process.env.WS_PORT || 8081;
 const standalone = process.env.STANDALONE === 'true';
 let ws_proxy;
 
-const twelve_hrs = 1000 * 60 * 60 * 12;
+const MS_TWELVE_HR = 1000 * 60 * 60 * 12;
 const app = express()
     .use(express.json())
     .use(session({
         cookie: {
-            expires: twelve_hrs
+            expires: MS_TWELVE_HR
         },
         resave: false,
         saveUninitialized: false,
@@ -33,10 +34,18 @@ const app = express()
 
     }));
 
-const wss = new WebSocketServer({ port: ws_port },
+const wss = new WebSocketServer({ port: ws_port, clientTracking: true },
     () => {
         log.info(`WebSocket server listening at port ${ws_port}`);
     });
+
+// ping interval every 3 seconds
+const MS_THREE_SEC = 3000;
+setInterval(() => {
+    wss.clients.forEach(socket => {
+        socket.ping();
+    });
+}, MS_THREE_SEC);
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
@@ -49,7 +58,8 @@ apiRouter.get('/data', (_, res) => {
 });
 
 // Send current score to newly connecting clients
-wss.on('connection', socket => {
+wss.on('connection', (socket, req) => {
+    log.debug({ ip: req.socket.remoteAddress }, "WebSocket connection");
     socket.send(JSON.stringify(statusManager.getStatus()));
 });
 
